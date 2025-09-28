@@ -33,6 +33,9 @@ dependencies:
   http: ^1.2.1
   jwt_decoder: ^2.0.1
   intl: ^0.18.0
+  provider: ^6.1.1
+  image_picker: ^1.2.0
+
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -41,6 +44,14 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+  flutter_launcher_icons: ^0.13.1
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "images/logo avec arriere plan supprimer.png"
+
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

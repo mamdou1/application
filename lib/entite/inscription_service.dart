@@ -1,5 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'inscription_en_ligne_dto.dart';
+import 'package:gestion_salle_de_sport/utils/api_endpoints.dart';
 
 class InscriptionService {
   static const String baseUrl = 'http://10.0.2.2:8080';
@@ -14,7 +15,7 @@ class InscriptionService {
       // Créer une requête multipart
       var request = http.MultipartRequest(
         'POST',
-        Uri.parse('$baseUrl/api/demandeInscriptions/inscriptin/en-ligne'),
+        Uri.parse(ApiEndpoints.inscriptionEnLigne),
       );
 
       // Ajouter les champs texte

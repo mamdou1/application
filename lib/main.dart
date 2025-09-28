@@ -1,20 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'connexion.dart';
 import 'inscription.dart';
 import 'evennement.dart';
 import 'acceuille.dart';
 import 'a_propos.dart';
 import 'changer_password.dart';
-import 'detaille_gym.dart';
 import 'historique.dart';
 import 'liste_gym.dart';
 import 'scan_qr.dart';
 import 'soumettre_demande.dart';
 import 'profil.dart';
+import 'details_gym.dart';
+import 'StockageDeToken.dart';
+import 'liste_gym/choix_gym.dart';
+import 'liste_gym/ma_gym.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => StockageDeToken()),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -31,12 +43,25 @@ class MyApp extends StatelessWidget {
         '/acceuille':(context)=> AcceuillePage(),
         '/a_propos': (context) => AProposPage(),
         '/changer_password': (context) => ChangerPasswordPage(),
-        '/detaille_gym':(context)=> DetailleGymPage(),
         '/historique':(context)=> HistoriquePage(),
         '/liste_gym': (context) => ListeGymPage(),
         '/scan_qr': (context) => ScanQrPage(),
         '/soumettre_demande':(context)=> SoumettreDemandePage(),
         '/profil': (context) => ProfilPage(),
+        '/details_gym': (context) => DetailsGymPage(),
+        '/choix_gym': (context) => ChoixGymPage(),
+        '/ma_gym': (context) => MaGymPage(),
+
+      },
+      onGenerateRoute: (settings) {
+        // Gestion des routes non définies
+        return MaterialPageRoute(
+          builder: (context) => Scaffold(
+            body: Center(
+              child: Text('Page non trouvée: ${settings.name}'),
+            ),
+          ),
+        );
       },
     );
   }

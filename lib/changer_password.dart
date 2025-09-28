@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'StockageDeToken.dart';
+import 'utils/api_endpoints.dart';
+
 
 class ChangerPasswordPage extends StatelessWidget {
   const ChangerPasswordPage({super.key});
@@ -18,6 +24,79 @@ class ChangerPassword extends StatefulWidget {
 
 class _CreateChangerPasswordPage extends State<ChangerPassword> {
   bool _motDePasseVisible = false;
+  bool _isLoading = false; // Indicateur de chargement
+
+  // URL du backend
+  static const String baseUrl = 'http://10.0.2.2:8080'; // Pour émulateur Android 192.168.137.1
+  static const String baseUrls = 'http://192.168.137.1:8080';
+
+  // Contrôleurs pour les champs de texte
+  final _ancienMotDePasseController = TextEditingController();
+  final _nouveauMotDePasseController = TextEditingController();
+  final _confirmerMotDePasseController = TextEditingController();
+
+
+  Future<void> _changePassword() async {
+    if (_nouveauMotDePasseController.text != _confirmerMotDePasseController.text) {
+      _showError('Les nouveaux mots de passe ne correspondent pas.');
+      return;
+    }
+
+    // 🔥 RÉCUPÉRER LE TOKEN DEPUIS LE STOCKAGE GLOBAL
+    final stockageToken = Provider.of<StockageDeToken>(context, listen: false);
+    final String? token = stockageToken.token;
+
+    setState(() => _isLoading = true);
+    try {
+      final response = await http.post(
+        Uri.parse(ApiEndpoints.changerMotDePasse),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token', // 🔥 Utiliser le token
+        },
+        body: jsonEncode({
+          'ancienMotDePasse': _ancienMotDePasseController.text,
+          'nouveauMotDePasse': _nouveauMotDePasseController.text,
+          'confirmerMotDePasse': _confirmerMotDePasseController.text,
+        }),
+      );
+
+      if (response.statusCode == 201) {
+        _showSuccess('Mot de passe changé avec succès!');
+        // Optionnel : Rediriger vers une autre page ou vider les champs
+        _ancienMotDePasseController.clear();
+        _nouveauMotDePasseController.clear();
+        _confirmerMotDePasseController.clear();
+      } else {
+        final data = jsonDecode(response.body);
+        _showError(data['message'] ?? 'Erreur lors du changement de mot de passe.');
+      }
+    } catch (e) {
+      _showError('Erreur de connexion : $e');
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
+
+  void _showSuccess(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message, style: TextStyle(color: Colors.green))),
+    );
+  }
+
+  @override
+  void dispose() {
+    _ancienMotDePasseController.dispose();
+    _nouveauMotDePasseController.dispose();
+    _confirmerMotDePasseController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +105,7 @@ class _CreateChangerPasswordPage extends State<ChangerPassword> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         elevation: 0,
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: false, // Active le bouton de retour par défaut
         title: Row(
           children: [
             IconButton(
@@ -35,9 +114,9 @@ class _CreateChangerPasswordPage extends State<ChangerPassword> {
                 Navigator.pop(context);
               },
             ),
-            const SizedBox(width: 10),
+            const SizedBox(width: 10), // Ajustement pour aligner le titre
             Text(
-              "Création de compte",
+              "Changer le mot de passe",
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -50,7 +129,7 @@ class _CreateChangerPasswordPage extends State<ChangerPassword> {
       body: Stack(
         children: [
           Positioned(
-            bottom: 0, // Positionne le conteneur en bas
+            bottom: 0,
             left: 0,
             right: 0,
             child: Container(
@@ -58,7 +137,7 @@ class _CreateChangerPasswordPage extends State<ChangerPassword> {
               width: double.infinity,
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(20), // 👈 tous les coins arrondis
+                borderRadius: BorderRadius.circular(20),
               ),
               child: Center(
                 child: SizedBox(
@@ -80,12 +159,12 @@ class _CreateChangerPasswordPage extends State<ChangerPassword> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(height: 60),
-
+                          const SizedBox(height: 60),
                           SizedBox(
                             height: 50,
-                            width: double.infinity, // S'adapter à la largeur de la Card
+                            width: double.infinity,
                             child: TextField(
+                              controller: _ancienMotDePasseController,
                               obscureText: !_motDePasseVisible,
                               decoration: InputDecoration(
                                 filled: true,
@@ -99,7 +178,7 @@ class _CreateChangerPasswordPage extends State<ChangerPassword> {
                                 ),
                                 prefixIcon: Icon(Icons.key),
                                 label: Text(
-                                  "Anciens mot de passe",
+                                  "Ancien mot de passe",
                                   style: TextStyle(color: Colors.grey[700]),
                                 ),
                                 suffixIcon: IconButton(
@@ -120,11 +199,12 @@ class _CreateChangerPasswordPage extends State<ChangerPassword> {
                               ),
                             ),
                           ),
-                          SizedBox(height: 50),
+                          const SizedBox(height: 50),
                           SizedBox(
                             height: 50,
-                            width: double.infinity, // S'adapter à la largeur de la Card
+                            width: double.infinity,
                             child: TextField(
+                              controller: _nouveauMotDePasseController,
                               obscureText: !_motDePasseVisible,
                               decoration: InputDecoration(
                                 filled: true,
@@ -138,7 +218,7 @@ class _CreateChangerPasswordPage extends State<ChangerPassword> {
                                 ),
                                 prefixIcon: Icon(Icons.key),
                                 label: Text(
-                                  "Mot de passe",
+                                  "Nouveau mot de passe",
                                   style: TextStyle(color: Colors.grey[700]),
                                 ),
                                 suffixIcon: IconButton(
@@ -159,13 +239,12 @@ class _CreateChangerPasswordPage extends State<ChangerPassword> {
                               ),
                             ),
                           ),
-
-                          SizedBox(height: 50),
-
+                          const SizedBox(height: 50),
                           SizedBox(
                             height: 50,
-                            width: double.infinity, // S'adapter à la largeur de la Card
+                            width: double.infinity,
                             child: TextField(
+                              controller: _confirmerMotDePasseController,
                               obscureText: !_motDePasseVisible,
                               decoration: InputDecoration(
                                 filled: true,
@@ -200,19 +279,16 @@ class _CreateChangerPasswordPage extends State<ChangerPassword> {
                               ),
                             ),
                           ),
-
                           const SizedBox(height: 50),
-
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 25.0),
                             child: SizedBox(
                               height: 50,
-                              width: double.infinity, // S'adapter à la largeur de la Card
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  print("Bouton Se connecter cliqué !");
-                                  Navigator.pushNamed(context, '/inscription');
-                                },
+                              width: double.infinity,
+                              child: _isLoading
+                                  ? CircularProgressIndicator(color: Colors.white)
+                                  : ElevatedButton(
+                                onPressed: _changePassword,
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.orange[900],
                                   foregroundColor: Colors.black,
@@ -246,5 +322,4 @@ class _CreateChangerPasswordPage extends State<ChangerPassword> {
     );
   }
 }
-
 

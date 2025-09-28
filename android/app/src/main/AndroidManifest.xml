@@ -1,7 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- ✅ Permissions ici -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+
     <application
-        android:label="gestion_salle_de_sport"
-        android:name="${applicationName}"
+        android:label="Gym-pro"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

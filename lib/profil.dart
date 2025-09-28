@@ -122,103 +122,108 @@ class _CreateProfilPage extends State<Profil> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(20), // 👈 tous les coins arrondis
               ),
-              child: Center(
-                child: SizedBox(
-                  height: 630,
-                  width: 340,
-                  child: Card(
-                    elevation: 6,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(15),
-                        topRight: Radius.circular(15),
-                        bottomLeft: Radius.circular(15),
-                        bottomRight: Radius.circular(15),
-                      ),
-                    ),
-                    color: Colors.grey[300],
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // SizedBox(height: 60),
-                          Center(
-                            child: Column(
-                              children: [
-                                CircleAvatar(
-                                  radius: 50,
-                                  backgroundColor: Colors.grey[400],
-                                  child: profileImageBytes != null
-                                      ? ClipOval(
-                                    child: Image.memory(
-                                      profileImageBytes!,
-                                      fit: BoxFit.cover,
-                                      width: 90,
-                                      height: 90,
+              child: SingleChildScrollView(
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 30.0),
+                    child: SizedBox(
+                      height: 680,
+                      width: 340,
+                      child: Card(
+                        elevation: 6,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(15),
+                            topRight: Radius.circular(15),
+                            bottomLeft: Radius.circular(15),
+                            bottomRight: Radius.circular(15),
+                          ),
+                        ),
+                        color: Colors.grey[300],
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // SizedBox(height: 60),
+                              Center(
+                                child: Column(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 50,
+                                      backgroundColor: Colors.grey[400],
+                                      child: profileImageBytes != null
+                                          ? ClipOval(
+                                        child: Image.memory(
+                                          profileImageBytes!,
+                                          fit: BoxFit.cover,
+                                          width: 90,
+                                          height: 90,
+                                        ),
+                                      )
+                                          : Icon(Icons.person, size: 50, color: Colors.white),
                                     ),
-                                  )
-                                      : Icon(Icons.person, size: 50, color: Colors.white),
+                                    SizedBox(height: 10),
+                                    const Image(
+                                      image: AssetImage('images/camera-pofil.png'),
+                                      // width: 300,
+                                      // height: 100,
+                                      fit: BoxFit.contain,
+                                    ),
+                                        Text("$prenom $nom ", style: TextStyle(fontSize: 20),),
+                                        SizedBox(width: 30),
+                                        Text(role, style: TextStyle(color: Colors.grey[600], fontSize: 20),),
+                                  ],
                                 ),
-                                SizedBox(height: 10),
-                                const Image(
-                                  image: AssetImage('images/camera-pofil.png'),
-                                  // width: 300,
-                                  // height: 100,
-                                  fit: BoxFit.contain,
-                                ),
-                                    Text("$prenom $nom ", style: TextStyle(fontSize: 20),),
-                                    SizedBox(width: 30),
-                                    Text(role, style: TextStyle(color: Colors.grey[600], fontSize: 20),),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          Row(
-                            children: [
-                              Text("Adresse : ", style: TextStyle(fontWeight: FontWeight.bold),),
-                              SizedBox(width: 20),
-                              Text(adresse, style: TextStyle(color: Colors.grey[600]),),
+                              ),
+                              SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  Text("Adresse : ", style: TextStyle(fontWeight: FontWeight.bold),),
+                                  SizedBox(width: 20),
+                                  Text(adresse, style: TextStyle(color: Colors.grey[600]),),
+                                ],
+                              ),
+                              SizedBox(height: 40),
+                              Row(
+                                children: [
+                                  Text("Email : ", style: TextStyle(fontWeight: FontWeight.bold),),
+                                  SizedBox(width: 20),
+                                  Text(email, style: TextStyle(color: Colors.grey[600]),),
+                                ],
+                              ),
+                              SizedBox(height: 40),
+                              Row(
+                                children: [
+                                  Text("Date de naissance : ", style: TextStyle(fontWeight: FontWeight.bold),),
+                                  Text(dateDeNaissance, style: TextStyle(color: Colors.grey[600]),),
+                                ],
+                              ),
+                              SizedBox(height: 40),
+                              Row(
+                                children: [
+                                  Text("Téléphone : ", style: TextStyle(fontWeight: FontWeight.bold),),
+                                  Text(telephone, style: TextStyle(color: Colors.grey[600]),),
+                                ],
+                              ),
+                              SizedBox(height: 40),
+                              Row(
+                                children: [
+                                  Text("Genre : ", style: TextStyle(fontWeight: FontWeight.bold),),
+                                  Text(genre, style: TextStyle(color: Colors.grey[600]),),
+                                ],
+                              ),
+                              SizedBox(height: 40),
+                              Row(
+                                children: [
+                                  Text("Date de créaction : ", style: TextStyle(fontWeight: FontWeight.bold),),
+                                  Text(dateCreation, style: TextStyle(color: Colors.grey[600]),),
+                                ],
+                              ),
+                              SizedBox(height: 40),
                             ],
                           ),
-                          SizedBox(height: 40),
-                          Row(
-                            children: [
-                              Text("Email : ", style: TextStyle(fontWeight: FontWeight.bold),),
-                              SizedBox(width: 20),
-                              Text(email, style: TextStyle(color: Colors.grey[600]),),
-                            ],
-                          ),
-                          SizedBox(height: 40),
-                          Row(
-                            children: [
-                              Text("Date de naissance : ", style: TextStyle(fontWeight: FontWeight.bold),),
-                              Text(dateDeNaissance, style: TextStyle(color: Colors.grey[600]),),
-                            ],
-                          ),
-                          SizedBox(height: 40),
-                          Row(
-                            children: [
-                              Text("Téléphone : ", style: TextStyle(fontWeight: FontWeight.bold),),
-                              Text(telephone, style: TextStyle(color: Colors.grey[600]),),
-                            ],
-                          ),
-                          SizedBox(height: 40),
-                          Row(
-                            children: [
-                              Text("Genre : ", style: TextStyle(fontWeight: FontWeight.bold),),
-                              Text(genre, style: TextStyle(color: Colors.grey[600]),),
-                            ],
-                          ),
-                          SizedBox(height: 40),
-                          Row(
-                            children: [
-                              Text("Date de créaction : ", style: TextStyle(fontWeight: FontWeight.bold),),
-                              Text(dateCreation, style: TextStyle(color: Colors.grey[600]),),
-                            ],
-                          ),
-                          SizedBox(height: 40),
-                        ],
+                        ),
                       ),
                     ),
                   ),

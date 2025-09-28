@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:gestion_salle_de_sport/user.dart';
+import 'package:gestion_salle_de_sport/entite/user.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:provider/provider.dart';
+import 'utils/api_endpoints.dart';
+import 'StockageDeToken.dart';
 
 class ConnexionPage extends StatelessWidget {
   const ConnexionPage({super.key});
@@ -29,21 +32,17 @@ class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController _telephoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  // URL du backend
-  static const String baseUrl = 'http://10.0.2.2:8080'; // Pour émulateur Android 192.168.137.1
-  static const String baseUrls = 'http://192.168.137.1:8080';
-
   Future<http.Response> _save() async {
     final user = User(_telephoneController.text, _passwordController.text);
     return await http.post(
-      Uri.parse('$baseUrl/api/auth/connexion'),
+      Uri.parse(ApiEndpoints.connexion),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(user.toJson()),
     );
   }
 
   Future<Map<String, dynamic>> getUserProfil(int id, String token) async{
-    final url = Uri.parse('$baseUrl/api/users/profil/$id');
+    final url = Uri.parse(ApiEndpoints.profil(id));
     final response = await http.get(
         url,
       headers: {
@@ -60,43 +59,27 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _login() async {
     if (_formKey.currentState!.validate()) {
-      setState(() => _isLoading = true); // Démarre le chargement
+      setState(() => _isLoading = true);
       try {
         final response = await _save();
         final data = jsonDecode(response.body);
 
-        if (response.statusCode == 200 ) { //&& data['message'] == 'Connexion réussie'
+        if (response.statusCode == 200) {
           final String token = data['token'];
           if (token.isNotEmpty) {
-
             // ✅ Décoder le token pour récupérer l'id
             Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
-            print("Profil data: $data"); // Vérifiez la présence des dates
+            int id = decodedToken['id'];
 
-            int id = decodedToken['id']; // ✅
-
-            // 🔥 Récupération du profil complet depuis l’API
+            // 🔥 Récupération du profil complet depuis l'API
             final userProfile = await getUserProfil(id, token);
 
-            // Naviguer vers l'accueil avec les données
-            Navigator.pushReplacementNamed(
-              context,
-              '/acceuille',
-              arguments: {
-                'id': id,
-                'token': token,
-                'nom': userProfile['nom'] ?? '',
-                'prenom': userProfile['prenom'] ?? '',
-                'email': userProfile['email'] ?? '',
-                'adresse': userProfile['adresse'] ?? '',
-                'telephone': userProfile['telephone'] ?? '',
-                'genre': userProfile['genre'] ?? '',
-                'role': userProfile['role'] ?? '',
-                'date_creation': userProfile['date_creation'] ?? '',
-                'date_de_naissance': userProfile['date_de_naissance'] ?? '',
-                'profil': userProfile['profil'] ?? '', // ⚡ Ajout base64
-              },
-            );
+            // 🔥 SAUVEGARDER LE TOKEN ET LES DONNÉES DANS LE STOCKAGE GLOBAL
+            final stockageToken = Provider.of<StockageDeToken>(context, listen: false);
+            stockageToken.sauvegarderToken(token, userProfile);
+
+            // 🔥 NAVIGATION SIMPLIFIÉE - Les données sont dans le StockageDeToken
+            Navigator.pushReplacementNamed(context, '/liste_gym');
           } else {
             _showError('Aucun token reçu du serveur');
           }
@@ -106,7 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
       } catch (e) {
         _showError('Erreur : $e');
       } finally {
-        setState(() => _isLoading = false); // Arrête le chargement
+        setState(() => _isLoading = false);
       }
     }
   }
@@ -264,7 +247,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     const SizedBox(height: 30),
                     GestureDetector(
                       onTap: () {
-                        Navigator.pushNamed(context, "/inscription");
+                        Navigator.pushNamed(context, "/liste_gym");
                       },
                       child: const Text(
                         "Créer un compte",

@@ -1,14 +1,15 @@
 import 'dart:convert';
 import 'dart:typed_data';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'StockageDeToken.dart';
 
 class AcceuillePage extends StatelessWidget {
   const AcceuillePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Acceuille();
+    return const Acceuille();
   }
 }
 
@@ -21,20 +22,16 @@ class Acceuille extends StatefulWidget {
 
 class _CreateAcceuillePage extends State<Acceuille> {
   Uint8List? profileImageBytes;
-  Map<String, dynamic> args = {};
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if(args.isEmpty){
-      args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>? ?? {};
-      print("Args in Profil: $args"); // Vérifiez les valeurs
-      _loadProfileImage(); // Charge l'image au démarrage
-    }
+    _loadProfileImage();
   }
 
   Future<void> _loadProfileImage() async {
-    final profilBase64 = args["profil"] ?? "";
+    final stockageToken = Provider.of<StockageDeToken>(context, listen: false);
+    final profilBase64 = stockageToken.userData?["profil"] ?? "";
     if (profilBase64.isNotEmpty) {
       try {
         final bytes = base64Decode(profilBase64);
@@ -47,26 +44,21 @@ class _CreateAcceuillePage extends State<Acceuille> {
     }
   }
 
-  static Uint8List _decodeBase64(String base64String) {
-    return base64Decode(base64String);
-  }
-
   void _logout() {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Déconnexion réussie.")));
-    // Efface les données si tu utilises SharedPreferences ou autre
-    // Exemple : SharedPreferences prefs = await SharedPreferences.getInstance();
-    // await prefs.clear();
-
-    // Redirection vers la page de connexion
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Déconnexion réussie.")),
+    );
+    Provider.of<StockageDeToken>(context, listen: false).effacerToken();
     Navigator.pushNamedAndRemoveUntil(context, "/connexion", (route) => false);
   }
 
-
   @override
   Widget build(BuildContext context) {
-    String nom = args["nom"] ?? "";
-    String prenom = args["prenom"] ?? "";
-    String role = args["role"] ?? "";
+    final stockageToken = Provider.of<StockageDeToken>(context);
+    final userData = stockageToken.userData ?? {};
+    final String nom = userData["nom"] ?? "";
+    final String prenom = userData["prenom"] ?? "";
+    final String role = userData["role"] ?? "";
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -76,31 +68,26 @@ class _CreateAcceuillePage extends State<Acceuille> {
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            icon: Icon(Icons.notifications, color: Colors.white, size: 25),
+            icon: const Icon(Icons.notifications, color: Colors.white, size: 25),
             onPressed: () {},
           ),
           PopupMenuButton<String>(
-            icon: Icon(Icons.more_vert, color: Colors.white, size: 25),
+            icon: const Icon(Icons.more_vert, color: Colors.white, size: 25),
             onSelected: (value) {
               if (value == "profil") {
-                Navigator.pushReplacementNamed(
-                    context,
-                    "/profil",
-                    arguments: {
-                      "nom": args["nom"],
-                      "prenom": args["prenom"],
-                      "email": args["email"],
-                      "adresse": args["adresse"],
-                      "telephone": args["telephone"],
-                      "genre": args["genre"],
-                      "role": args["role"],
-                      "date_de_naissance": args["date_de_naissance"],
-                      "date_creation": args["date_creation"],
-                      "profil": args["profil"],
-                    }
+                Navigator.pushNamed(
+                  context,
+                  "/profil",
+                  arguments: userData,
                 );
               } else if (value == "mot de passe") {
-                Navigator.pushNamed(context, "/changer_password");
+                Navigator.pushNamed(
+                  context,
+                  "/changer_password",
+                  arguments: {
+                    'token': stockageToken.token,
+                  },
+                );
               } else if (value == "a propos") {
                 Navigator.pushNamed(context, "/a_propos");
               } else if (value == "deconnexion") {
@@ -108,7 +95,7 @@ class _CreateAcceuillePage extends State<Acceuille> {
               }
             },
             itemBuilder: (BuildContext context) => [
-              PopupMenuItem(
+              const PopupMenuItem(
                 value: "profil",
                 child: Row(
                   children: [
@@ -118,7 +105,7 @@ class _CreateAcceuillePage extends State<Acceuille> {
                   ],
                 ),
               ),
-              PopupMenuItem(
+              const PopupMenuItem(
                 value: "mot de passe",
                 child: Row(
                   children: [
@@ -128,7 +115,7 @@ class _CreateAcceuillePage extends State<Acceuille> {
                   ],
                 ),
               ),
-              PopupMenuItem(
+              const PopupMenuItem(
                 value: "a propos",
                 child: Row(
                   children: [
@@ -138,7 +125,7 @@ class _CreateAcceuillePage extends State<Acceuille> {
                   ],
                 ),
               ),
-              PopupMenuItem(
+              const PopupMenuItem(
                 value: "deconnexion",
                 child: Row(
                   children: [
@@ -152,55 +139,55 @@ class _CreateAcceuillePage extends State<Acceuille> {
           )
         ],
       ),
-      body: Stack(
+      body: Column(
         children: [
-          Row(
-            children: [
-              CircleAvatar(
-                radius: 50,
-                backgroundColor: Colors.grey[400],
-                child: profileImageBytes != null
-                    ? ClipOval(
-                  child: Image.memory(
-                    profileImageBytes!,
-                    fit: BoxFit.cover,
-                    width: 100,
-                    height: 100,
-                  ),
+          Padding(
+            padding: const EdgeInsets.only(left: 18.0),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 40,
+                  backgroundColor: Colors.grey[400],
+                  child: profileImageBytes != null
+                      ? ClipOval(
+                    child: Image.memory(
+                      profileImageBytes!,
+                      fit: BoxFit.cover,
+                      width: 80,
+                      height: 80,
+                    ),
+                  )
+                      : const Icon(Icons.person, size: 50, color: Colors.white),
+                ),
+                const SizedBox(width: 20),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "$prenom $nom",
+                      style: const TextStyle(color: Colors.white, fontSize: 20),
+                    ),
+                    //const SizedBox(height: 5),
+                    Text(
+                      role,
+                      style: const TextStyle(color: Colors.grey, fontSize: 15),
+                    ),
+                  ],
                 )
-                    : Icon(Icons.person, size: 50, color: Colors.white),
-              ),
-              SizedBox(width: 10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "$prenom $nom",
-                    style: TextStyle(color: Colors.white, fontSize: 20),
-                  ),
-                  SizedBox(height: 5),
-                  Text(
-                    role,
-                    style: TextStyle(color: Colors.grey, fontSize: 15),
-                  ),
-                ],
-              )
-            ],
+              ],
+            ),
           ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Container(
+            const Spacer(),
+            Container(
               height: 600,
               width: double.infinity,
               decoration: BoxDecoration(
                 border: Border.all(
                   color: Colors.white,
-                  width: 2.0,
+                  width: 1.0,
                 ),
                 borderRadius: BorderRadius.circular(50),
-                gradient: LinearGradient(
+                gradient: const LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
@@ -209,7 +196,7 @@ class _CreateAcceuillePage extends State<Acceuille> {
                   ],
                 ),
               ),
-              padding: EdgeInsets.only(top: 60),
+              padding: const EdgeInsets.only(top: 60),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -217,19 +204,20 @@ class _CreateAcceuillePage extends State<Acceuille> {
                     padding: const EdgeInsets.only(left: 30),
                     child: Text(
                       "Bienvenue, $nom",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                  SizedBox(height: 60),
+                  const SizedBox(height: 60),
                   Expanded(
                     child: GridView.count(
                       crossAxisCount: 2,
                       crossAxisSpacing: 30,
                       mainAxisSpacing: 40,
-                      padding: EdgeInsets.all(25),
+                      padding: const EdgeInsets.all(25),
                       children: List.generate(4, (index) {
                         List<String> labels = [
                           "Boutique",
@@ -263,11 +251,10 @@ class _CreateAcceuillePage extends State<Acceuille> {
                                   width: 100,
                                   fit: BoxFit.contain,
                                 ),
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 Text(
                                   labels[index],
-                                  style:
-                                  TextStyle(fontWeight: FontWeight.bold),
+                                  style: const TextStyle(fontWeight: FontWeight.bold),
                                 ),
                               ],
                             ),
@@ -279,7 +266,6 @@ class _CreateAcceuillePage extends State<Acceuille> {
                 ],
               ),
             ),
-          ),
         ],
       ),
     );
