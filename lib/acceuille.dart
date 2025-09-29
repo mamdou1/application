@@ -178,94 +178,173 @@ class _CreateAcceuillePage extends State<Acceuille> {
             ),
           ),
             const Spacer(),
-            Container(
-              height: 600,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.white,
-                  width: 1.0,
-                ),
-                borderRadius: BorderRadius.circular(50),
-                gradient: const LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.black,
-                    Color(0xFFE76702),
-                  ],
-                ),
+          Container(
+            height: 600,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.white,
+                width: 1.0,
               ),
-              padding: const EdgeInsets.only(top: 60),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 30),
-                    child: Text(
-                      "Bienvenue, $nom",
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 60),
-                  Expanded(
-                    child: GridView.count(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 30,
-                      mainAxisSpacing: 40,
-                      padding: const EdgeInsets.all(25),
-                      children: List.generate(4, (index) {
-                        List<String> labels = [
-                          "Boutique",
-                          "Calendrier",
-                          "Historique",
-                          "Scan QR"
-                        ];
-                        List<String> imagePaths = [
-                          "images/shop.png",
-                          "images/calendar.png",
-                          "images/hitorique.jpeg",
-                          "images/Qr.png",
-                        ];
-
-                        return GestureDetector(
-                          onTap: () {
-                            print("Tu as cliqué sur : ${labels[index]}");
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(15),
-                              border: Border.all(color: Colors.orange, width: 2),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset(
-                                  imagePaths[index],
-                                  height: 100,
-                                  width: 100,
-                                  fit: BoxFit.contain,
-                                ),
-                                const SizedBox(height: 10),
-                                Text(
-                                  labels[index],
-                                  style: const TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      }),
-                    ),
-                  ),
+              borderRadius: BorderRadius.circular(50),
+              gradient: const LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.black,
+                  Color(0xFFE76702),
                 ],
               ),
             ),
+            padding: const EdgeInsets.only(top: 60),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 30),
+                  child: Text(
+                    "Bienvenue, $nom",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 60),
+                Expanded(
+                  child: GridView.count(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 30,
+                    mainAxisSpacing: 40,
+                    padding: const EdgeInsets.all(25),
+                    children: [
+                      // Boutique
+                      GestureDetector(
+                        onTap: () {
+                          print("Tu as cliqué sur : Boutique");
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(color: Colors.orange, width: 2),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                "images/shop.png",
+                                height: 100,
+                                width: 100,
+                                fit: BoxFit.contain,
+                              ),
+                              const SizedBox(height: 10),
+                              const Text(
+                                "Boutique",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      // Calendrier
+                      GestureDetector(
+                        onTap: () {
+                          print("Tu as cliqué sur : Calendrier");
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(color: Colors.orange, width: 2),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                "images/calendar.png",
+                                height: 100,
+                                width: 100,
+                                fit: BoxFit.contain,
+                              ),
+                              const SizedBox(height: 10),
+                              const Text(
+                                "Calendrier",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      // 🔥 HISTORIQUE - MODIFICATION ICI
+                      GestureDetector(
+                        onTap: () {
+                          // Navigation vers la page historique
+                          Navigator.pushNamed(context, "/historique");
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(color: Colors.orange, width: 2),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                "images/hitorique.jpeg",
+                                height: 100,
+                                width: 100,
+                                fit: BoxFit.contain,
+                              ),
+                              const SizedBox(height: 10),
+                              const Text(
+                                "Historique",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      // Scan QR
+                      GestureDetector(
+                        onTap: () {
+                          print("Tu as cliqué sur : Scan QR");
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(color: Colors.orange, width: 2),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                "images/Qr.png",
+                                height: 100,
+                                width: 100,
+                                fit: BoxFit.contain,
+                              ),
+                              const SizedBox(height: 10),
+                              const Text(
+                                "Scan QR",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

@@ -29,7 +29,7 @@ class ApiEndpoints {
   static String gymsDeMembre = '$baseUrl/api/users/gyms';
 
   // historique
-  static String historiqueAbonnement (int id) => '$baseUrl/api/abonnements/historique/$id';
+  static String historiqueAbonnement(int userId) => '$baseUrl/api/abonnements/historique';
 
   //  Evénnement
   static String evennement = '$baseUrl/api/evenements/liste';
