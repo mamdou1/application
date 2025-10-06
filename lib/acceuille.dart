@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'StockageDeToken.dart';
+
+import 'StockageDeToken.dart'; // Assurez-vous que le chemin est correct
 
 class AcceuillePage extends StatelessWidget {
   const AcceuillePage({super.key});
@@ -60,6 +61,133 @@ class _CreateAcceuillePage extends State<Acceuille> {
     final String prenom = userData["prenom"] ?? "";
     final String role = userData["role"] ?? "";
 
+    // Définir dynamiquement le dernier élément du GridView
+    Widget lastItem;
+    if (role.toUpperCase() == "ADMIN" || role.toUpperCase() == "GERANT") {
+      lastItem = GestureDetector(
+        onTap: () {
+          Navigator.pushNamed(context, "/statistiques");
+          print("Tu as cliqué sur : statistiques");
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15),
+            border: Border.all(color: Colors.orange, width: 2),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                "images/statistic.png",
+                height: 100,
+                width: 100,
+                fit: BoxFit.contain,
+              ),
+              const SizedBox(height: 10),
+              const Text(
+                "Statistiques",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        ),
+      );
+    } else {
+      lastItem = GestureDetector(
+        onTap: () {
+          Navigator.pushNamed(context, "/profil");
+          print("Tu as cliqué sur : Profil");
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15),
+            border: Border.all(color: Colors.orange, width: 2),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                "images/profile.png",
+                height: 100,
+                width: 100,
+                fit: BoxFit.contain,
+              ),
+              const SizedBox(height: 10),
+              const Text(
+                "Profil",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    Widget middleItem;
+    if (role.toUpperCase() == "ADMIN" || role.toUpperCase() == "GERANT") {
+      middleItem = GestureDetector(
+        onTap: () {
+          Navigator.pushNamed(context, "/liste-paiements");
+          print("Tu as cliqué sur : liste des paiement");
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15),
+            border: Border.all(color: Colors.orange, width: 2),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                "images/liste-payement.png",
+                height: 100,
+                width: 100,
+                fit: BoxFit.contain,
+              ),
+              const SizedBox(height: 10),
+              const Text(
+                "Statistiques",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        ),
+      );
+    } else {
+      middleItem = GestureDetector(
+        onTap: () {
+          // Navigation vers la page historique
+          Navigator.pushNamed(context, "/historique");
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15),
+            border: Border.all(color: Colors.orange, width: 2),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                "images/hitorique.jpeg",
+                height: 100,
+                width: 100,
+                fit: BoxFit.contain,
+              ),
+              const SizedBox(height: 10),
+              const Text(
+                "Historique",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -69,7 +197,9 @@ class _CreateAcceuillePage extends State<Acceuille> {
         actions: [
           IconButton(
             icon: const Icon(Icons.notifications, color: Colors.white, size: 25),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, "/notifications");
+            },
           ),
           PopupMenuButton<String>(
             icon: const Icon(Icons.more_vert, color: Colors.white, size: 25),
@@ -84,9 +214,7 @@ class _CreateAcceuillePage extends State<Acceuille> {
                 Navigator.pushNamed(
                   context,
                   "/changer_password",
-                  arguments: {
-                    'token': stockageToken.token,
-                  },
+                  arguments: {'token': stockageToken.token},
                 );
               } else if (value == "a propos") {
                 Navigator.pushNamed(context, "/a_propos");
@@ -94,49 +222,60 @@ class _CreateAcceuillePage extends State<Acceuille> {
                 _logout();
               }
             },
-            itemBuilder: (BuildContext context) => [
-              const PopupMenuItem(
-                value: "profil",
-                child: Row(
-                  children: [
-                    Icon(Icons.person, color: Colors.orange),
-                    SizedBox(width: 10),
-                    Text("Profil"),
-                  ],
+            itemBuilder: (BuildContext context) {
+              List<PopupMenuEntry<String>> menuItems = [
+                const PopupMenuItem(
+                  value: "mot de passe",
+                  child: Row(
+                    children: [
+                      Icon(Icons.key, color: Colors.orange),
+                      SizedBox(width: 10),
+                      Text("Mot de passe"),
+                    ],
+                  ),
                 ),
-              ),
-              const PopupMenuItem(
-                value: "mot de passe",
-                child: Row(
-                  children: [
-                    Icon(Icons.key, color: Colors.orange),
-                    SizedBox(width: 10),
-                    Text("Mot de passe"),
-                  ],
+                const PopupMenuItem(
+                  value: "a propos",
+                  child: Row(
+                    children: [
+                      Icon(Icons.info, color: Colors.orange),
+                      SizedBox(width: 10),
+                      Text("A propos"),
+                    ],
+                  ),
                 ),
-              ),
-              const PopupMenuItem(
-                value: "a propos",
-                child: Row(
-                  children: [
-                    Icon(Icons.info, color: Colors.orange),
-                    SizedBox(width: 10),
-                    Text("A propos"),
-                  ],
+                const PopupMenuItem(
+                  value: "deconnexion",
+                  child: Row(
+                    children: [
+                      Icon(Icons.logout, color: Colors.orange),
+                      SizedBox(width: 10),
+                      Text("Déconnexion"),
+                    ],
+                  ),
                 ),
-              ),
-              const PopupMenuItem(
-                value: "deconnexion",
-                child: Row(
-                  children: [
-                    Icon(Icons.logout, color: Colors.orange),
-                    SizedBox(width: 10),
-                    Text("Déconnexion"),
-                  ],
-                ),
-              ),
-            ],
-          )
+              ];
+
+              // Ajouter l'option "Profil" uniquement si le rôle est ADMIN ou GERANT
+              if (role.toUpperCase() == "ADMIN" || role.toUpperCase() == "GERANT") {
+                menuItems.insert(
+                  0,
+                  const PopupMenuItem(
+                    value: "profil",
+                    child: Row(
+                      children: [
+                        Icon(Icons.person, color: Colors.orange),
+                        SizedBox(width: 10),
+                        Text("Profil"),
+                      ],
+                    ),
+                  ),
+                );
+              }
+
+              return menuItems;
+            },
+          ),
         ],
       ),
       body: Column(
@@ -252,6 +391,7 @@ class _CreateAcceuillePage extends State<Acceuille> {
                       // Calendrier
                       GestureDetector(
                         onTap: () {
+                          Navigator.pushNamed(context, "/evennement");
                           print("Tu as cliqué sur : Calendrier");
                         },
                         child: Container(
@@ -280,65 +420,10 @@ class _CreateAcceuillePage extends State<Acceuille> {
                       ),
 
                       // 🔥 HISTORIQUE - MODIFICATION ICI
-                      GestureDetector(
-                        onTap: () {
-                          // Navigation vers la page historique
-                          Navigator.pushNamed(context, "/historique");
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(15),
-                            border: Border.all(color: Colors.orange, width: 2),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                "images/hitorique.jpeg",
-                                height: 100,
-                                width: 100,
-                                fit: BoxFit.contain,
-                              ),
-                              const SizedBox(height: 10),
-                              const Text(
-                                "Historique",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
 
-                      // Scan QR
-                      GestureDetector(
-                        onTap: () {
-                          print("Tu as cliqué sur : Scan QR");
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(15),
-                            border: Border.all(color: Colors.orange, width: 2),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                "images/Qr.png",
-                                height: 100,
-                                width: 100,
-                                fit: BoxFit.contain,
-                              ),
-                              const SizedBox(height: 10),
-                              const Text(
-                                "Scan QR",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                      middleItem,
+                      // Dernier élément dynamique (Profil ou Statistiques)
+                      lastItem,
                     ],
                   ),
                 ),

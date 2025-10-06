@@ -247,7 +247,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     const SizedBox(height: 30),
                     GestureDetector(
                       onTap: () {
-                        Navigator.pushNamed(context, "/liste_gym");
+                        Navigator.pushNamed(context, "/inscription");
                       },
                       child: const Text(
                         "Créer un compte",

@@ -130,9 +130,9 @@ class _ChoixGymState extends State<ChoixGym> {
                   ),
                   Expanded(
                     child: ListView.builder(
-                                itemCount: gyms.length,
+                                itemCount: filteredGyms.length,
                                 itemBuilder: (context, index) {
-                    final gym = gyms[index];
+                    final gym = filteredGyms[index];
                     final String nom = gym['nom'] ?? 'Nom inconnu';
                     final String? photoBase64 = gym['photo']; // Assumez que c'est déjà une chaîne Base64
 

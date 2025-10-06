@@ -120,7 +120,7 @@ class _CreateHistoriquePage extends State<Historique> {
             const SizedBox(width: 10),
             Text(
               "Historique des Abonnements",
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.white, fontSize: 20),
             ),
           ],
         ),

@@ -120,7 +120,7 @@ class _CreateChangerPasswordPage extends State<ChangerPassword> {
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
-                fontSize: 25,
+                fontSize: 20,
               ),
             ),
           ],

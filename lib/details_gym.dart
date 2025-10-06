@@ -313,7 +313,7 @@ class _CreatedetailsGymPage extends State<detailsGym> {
                             ),
                           ),
 
-                          const SizedBox(width: 80),
+                          const SizedBox(width: 30),
 
                           Container(
                             child: Column(

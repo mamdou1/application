@@ -32,9 +32,11 @@ dependencies:
     sdk: flutter
   http: ^1.2.1
   jwt_decoder: ^2.0.1
-  intl: ^0.18.0
+  intl: ^0.20.2
   provider: ^6.1.1
   image_picker: ^1.2.0
+  syncfusion_flutter_calendar: ^31.1.21
+  syncfusion_flutter_charts: ^31.1.21
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -51,6 +53,7 @@ flutter_launcher_icons:
   android: true
   ios: true
   image_path: "images/logo avec arriere plan supprimer.png"
+  #backgroundColor: Colors.black
 
 
   # The "flutter_lints" package below contains a set of recommended lints to
@@ -81,6 +84,9 @@ flutter:
     - images/hitorique.jpeg
     - images/Qr.png
     - images/camera-pofil.png
+    - images/profile.png
+    - images/statistic.png
+    - images/liste-payement.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

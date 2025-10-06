@@ -15,6 +15,9 @@ import 'details_gym.dart';
 import 'StockageDeToken.dart';
 import 'liste_gym/choix_gym.dart';
 import 'liste_gym/ma_gym.dart';
+import 'notification.dart';
+import 'statistiques.dart';
+import 'liste_paiement.dart';
 
 void main() {
   runApp(
@@ -51,6 +54,9 @@ class MyApp extends StatelessWidget {
         '/details_gym': (context) => DetailsGymPage(),
         '/choix_gym': (context) => ChoixGymPage(),
         '/ma_gym': (context) => MaGymPage(),
+        "/notifications": (context) => NotificationsPage(),
+        "/statistiques": (context) => StatistiquesPage(),
+        "/liste-paiements": (context) => ListePaiementPage(),
 
       },
       onGenerateRoute: (settings) {
