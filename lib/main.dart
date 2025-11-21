@@ -18,6 +18,9 @@ import 'liste_gym/ma_gym.dart';
 import 'notification.dart';
 import 'statistiques.dart';
 import 'liste_paiement.dart';
+import 'mot de passe oublier/code_de_verification.dart';
+import 'mot de passe oublier/mot_de_passe_oublier.dart';
+import 'mot de passe oublier/verifier_email.dart';
 
 void main() {
   runApp(
@@ -57,6 +60,25 @@ class MyApp extends StatelessWidget {
         "/notifications": (context) => NotificationsPage(),
         "/statistiques": (context) => StatistiquesPage(),
         "/liste-paiements": (context) => ListePaiementPage(),
+
+
+        // Routes pour le mot de passe oublié
+        "/verifier-email": (context) => const VerifierEmailPage(),
+        "/code-verification": (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as Map;
+          return CodeVerificationPage(
+            email: args['email'],
+            token: args['token'],
+          );
+        },
+        "/nouveau-mot-de-passe": (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as Map;
+          return MotDePasseOublierPage(
+            email: args['email'],
+            token: args['token'],
+            codeVerification: args['codeVerification'],
+          );
+        },
 
       },
       onGenerateRoute: (settings) {

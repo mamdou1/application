@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'StockageDeToken.dart'; // Assurez-vous que le chemin est correct
 
 class AcceuillePage extends StatelessWidget {
@@ -61,13 +60,12 @@ class _CreateAcceuillePage extends State<Acceuille> {
     final String prenom = userData["prenom"] ?? "";
     final String role = userData["role"] ?? "";
 
-    // Définir dynamiquement le dernier élément du GridView
-    Widget lastItem;
-    if (role.toUpperCase() == "ADMIN" || role.toUpperCase() == "GERANT") {
-      lastItem = GestureDetector(
+    // Définir dynamiquement les éléments du GridView en fonction du rôle
+    List<Widget> gridItems = [
+      // Boutique (toujours visible)
+      GestureDetector(
         onTap: () {
-          Navigator.pushNamed(context, "/statistiques");
-          print("Tu as cliqué sur : statistiques");
+          print("Tu as cliqué sur : Boutique");
         },
         child: Container(
           decoration: BoxDecoration(
@@ -79,58 +77,26 @@ class _CreateAcceuillePage extends State<Acceuille> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
-                "images/statistic.png",
+                "images/shop.png",
                 height: 100,
                 width: 100,
                 fit: BoxFit.contain,
               ),
               const SizedBox(height: 10),
               const Text(
-                "Statistiques",
+                "Boutique",
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ],
           ),
         ),
-      );
-    } else {
-      lastItem = GestureDetector(
-        onTap: () {
-          Navigator.pushNamed(context, "/profil");
-          print("Tu as cliqué sur : Profil");
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(15),
-            border: Border.all(color: Colors.orange, width: 2),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                "images/profile.png",
-                height: 100,
-                width: 100,
-                fit: BoxFit.contain,
-              ),
-              const SizedBox(height: 10),
-              const Text(
-                "Profil",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
+      ),
 
-    Widget middleItem;
-    if (role.toUpperCase() == "ADMIN" || role.toUpperCase() == "GERANT") {
-      middleItem = GestureDetector(
+      // Calendrier (toujours visible pour COACH)
+      GestureDetector(
         onTap: () {
-          Navigator.pushNamed(context, "/liste-paiements");
-          print("Tu as cliqué sur : liste des paiement");
+          Navigator.pushNamed(context, "/evennement");
+          print("Tu as cliqué sur : Calendrier");
         },
         child: Container(
           decoration: BoxDecoration(
@@ -142,47 +108,147 @@ class _CreateAcceuillePage extends State<Acceuille> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
-                "images/liste-payement.png",
+                "images/calendar.png",
                 height: 100,
                 width: 100,
                 fit: BoxFit.contain,
               ),
               const SizedBox(height: 10),
               const Text(
-                "Statistiques",
+                "Calendrier",
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ],
           ),
         ),
-      );
-    } else {
-      middleItem = GestureDetector(
-        onTap: () {
-          // Navigation vers la page historique
-          Navigator.pushNamed(context, "/historique");
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(15),
-            border: Border.all(color: Colors.orange, width: 2),
+      ),
+    ];
+
+    // Ajouter des éléments supplémentaires pour ADMIN ou GERANT
+    if (role.toUpperCase() == "ROLE_ADMIN" || role.toUpperCase() == "GERANT") {
+      gridItems.add(
+        GestureDetector(
+          onTap: () {
+            Navigator.pushNamed(context, "/liste-paiements");
+            print("Tu as cliqué sur : liste des paiements");
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15),
+              border: Border.all(color: Colors.orange, width: 2),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  "images/liste-payement.png",
+                  height: 100,
+                  width: 100,
+                  fit: BoxFit.contain,
+                ),
+                const SizedBox(height: 10),
+                const Text(
+                  "Liste des paiements",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                "images/hitorique.jpeg",
-                height: 100,
-                width: 100,
-                fit: BoxFit.contain,
-              ),
-              const SizedBox(height: 10),
-              const Text(
-                "Historique",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ],
+        ),
+      );
+
+      gridItems.add(
+        GestureDetector(
+          onTap: () {
+            Navigator.pushNamed(context, "/statistiques");
+            print("Tu as cliqué sur : statistiques");
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15),
+              border: Border.all(color: Colors.orange, width: 2),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  "images/statistic.png",
+                  height: 100,
+                  width: 100,
+                  fit: BoxFit.contain,
+                ),
+                const SizedBox(height: 10),
+                const Text(
+                  "Statistiques",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    } else if (role.toUpperCase() != "COACH") { // Pour les autres rôles sauf COACH
+      gridItems.add(
+        GestureDetector(
+          onTap: () {
+            Navigator.pushNamed(context, "/historique");
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15),
+              border: Border.all(color: Colors.orange, width: 2),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  "images/hitorique.jpeg",
+                  height: 100,
+                  width: 100,
+                  fit: BoxFit.contain,
+                ),
+                const SizedBox(height: 10),
+                const Text(
+                  "Historique",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      gridItems.add(
+        GestureDetector(
+          onTap: () {
+            Navigator.pushNamed(context, "/profil");
+            print("Tu as cliqué sur : Profil");
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15),
+              border: Border.all(color: Colors.orange, width: 2),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  "images/profile.png",
+                  height: 100,
+                  width: 100,
+                  fit: BoxFit.contain,
+                ),
+                const SizedBox(height: 10),
+                const Text(
+                  "Profil",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
           ),
         ),
       );
@@ -306,7 +372,6 @@ class _CreateAcceuillePage extends State<Acceuille> {
                       "$prenom $nom",
                       style: const TextStyle(color: Colors.white, fontSize: 20),
                     ),
-                    //const SizedBox(height: 5),
                     Text(
                       role,
                       style: const TextStyle(color: Colors.grey, fontSize: 15),
@@ -316,7 +381,7 @@ class _CreateAcceuillePage extends State<Acceuille> {
               ],
             ),
           ),
-            const Spacer(),
+          const Spacer(),
           Container(
             height: 600,
             width: double.infinity,
@@ -357,74 +422,7 @@ class _CreateAcceuillePage extends State<Acceuille> {
                     crossAxisSpacing: 30,
                     mainAxisSpacing: 40,
                     padding: const EdgeInsets.all(25),
-                    children: [
-                      // Boutique
-                      GestureDetector(
-                        onTap: () {
-                          print("Tu as cliqué sur : Boutique");
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(15),
-                            border: Border.all(color: Colors.orange, width: 2),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                "images/shop.png",
-                                height: 100,
-                                width: 100,
-                                fit: BoxFit.contain,
-                              ),
-                              const SizedBox(height: 10),
-                              const Text(
-                                "Boutique",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-
-                      // Calendrier
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pushNamed(context, "/evennement");
-                          print("Tu as cliqué sur : Calendrier");
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(15),
-                            border: Border.all(color: Colors.orange, width: 2),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                "images/calendar.png",
-                                height: 100,
-                                width: 100,
-                                fit: BoxFit.contain,
-                              ),
-                              const SizedBox(height: 10),
-                              const Text(
-                                "Calendrier",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-
-                      // 🔥 HISTORIQUE - MODIFICATION ICI
-
-                      middleItem,
-                      // Dernier élément dynamique (Profil ou Statistiques)
-                      lastItem,
-                    ],
+                    children: gridItems,
                   ),
                 ),
               ],

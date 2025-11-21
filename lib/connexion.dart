@@ -240,9 +240,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                     const SizedBox(height: 60),
-                    Text(
-                      "Mot de passe oublié ?",
-                      style: TextStyle(color: Colors.orange[900]),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, "/verifier-email");
+                      },
+                      child: Text(
+                        "Mot de passe oublié ?",
+                        style: TextStyle(color: Colors.orange[900]),
+                      ),
                     ),
                     const SizedBox(height: 30),
                     GestureDetector(

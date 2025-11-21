@@ -37,6 +37,7 @@ class _CreateNotificationsPage extends State<Notifications> {
   Future<void> _fetchNotifications() async {
     final stockageToken = Provider.of<StockageDeToken>(context, listen: false);
     final String? token = stockageToken.token;
+    final String? role = stockageToken.role;
 
     if (token == null || token.isEmpty) {
       setState(() {
@@ -47,8 +48,16 @@ class _CreateNotificationsPage extends State<Notifications> {
     }
 
     try {
+
+      // Sélection automatique de la route selon le role
+      final String apiUrl = (role == 'ROLE_ADMIN')
+      ?ApiEndpoints.notificationGym
+          :ApiEndpoints.notificationUser;
+
+      print("➡️ Route utilisés : $apiUrl (role: $role)");
+
       final response = await http.get(
-        Uri.parse(ApiEndpoints.notificationUser),
+        Uri.parse(apiUrl),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',

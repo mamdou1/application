@@ -8,7 +8,7 @@ class ApiEndpoints {
 
   // 👤 Utilisateurs et Profil
   static String profil(int id) => '$baseUrls/api/users/profil/$id';
-  static String modifierProfil(int id) => '$baseUrls/api/users/modifier-membre/$id';
+  static String modifierProfil(int id) => '$baseUrls/api/users/modifier-profil/$id';
   static const String changerMotDePasse = '$baseUrls/api/users/changer';
 
   // 📝 Inscription et Demandes
@@ -83,6 +83,12 @@ class ApiEndpoints {
   //  Coaching
   static String coaching = '$baseUrls/api/coachings/liste';
   static String detailCoaching (int id) => '$baseUrls/api/coachings/mettre_a-jour/$id';
+
+  //  Mot de passe oublier
+  static String motDePasseOublier = '$baseUrls/api/auth/mot-de-passe-oublier';
+  static String verifierReinitialiser = '$baseUrls/api/auth/verifier/reitialiser';
+  static String modifierMotDePasse = '$baseUrls/api/auth/modifier';
+  static String renvoyerCode = '$baseUrls/api/auth/renvoyer-code';
 
 // Ajoutez d'autres endpoints ici au besoin, par exemple :
 // static const String ajoutMembre = '$baseUrl/api/users/ajouter/membre';
