@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gestion_salle_de_sport/boutique.dart';
 import 'package:provider/provider.dart';
 import 'connexion.dart';
 import 'inscription.dart';
@@ -57,6 +58,7 @@ class MyApp extends StatelessWidget {
         "/notifications": (context) => NotificationsPage(),
         "/statistiques": (context) => StatistiquesPage(),
         "/liste-paiements": (context) => ListePaiementPage(),
+        "/boutique": (context) => BoutiquePage(),
 
       },
       onGenerateRoute: (settings) {

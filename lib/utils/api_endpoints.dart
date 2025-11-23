@@ -1,7 +1,7 @@
 class ApiEndpoints {
   // 🔗 Base URL de ton backend (utilisez baseUrl pour émulateur, baseUrls pour appareil physique)
-  static const String baseUrl = 'http://10.0.2.2:8080'; // Pour émulateur Android
-  static const String baseUrls = 'http://192.168.137.1:8080'; // Pour appareil physique ou réseau local
+  static const String baseUrls = 'http://10.0.2.2:8080'; // Pour émulateur Android
+  static const String baseUrl = 'http://192.168.1.11:8080'; // Pour appareil physique ou réseau local
 
   // 🔐 Authentification
   static const String connexion = '$baseUrls/api/auth/connexion';
@@ -83,6 +83,31 @@ class ApiEndpoints {
   //  Coaching
   static String coaching = '$baseUrls/api/coachings/liste';
   static String detailCoaching (int id) => '$baseUrls/api/coachings/mettre_a-jour/$id';
+
+  // Boutique - Liste des produits
+  //static String listeProduits = '$baseUrls/api/produits/lister';
+  // 🛍️ ENDPOINTS PRODUITS
+  static const String ajouterProduit = '$baseUrls/api/produits/ajouter';
+  static const String listeProduits = '$baseUrls/api/produits/lister';
+  //static const String getAllProduits = '$baseUrls/api/produits';
+  static String getPhotoProduit(int id) => '$baseUrls/api/produits/photo/$id';
+  static String modifierProduit(int id) => '$baseUrls/api/produits/modifier/$id';
+  static String supprimerProduit(int id) => '$baseUrls/api/produits/supprimer/$id';
+  static String detailProduit(int produitId) => '$baseUrls/api/produits/$produitId';
+
+  // 🛒 Endpoints Panier
+  static const String creerPanier = '$baseUrls/api/paniers/creer_panier';
+  static String ajouterProduitPanier(int panierId, int produitId) =>
+      '$baseUrls/api/paniers/ajout_produit/$panierId/$produitId';
+  static String modifierQuantitePanier(int ligneId) =>
+      '$baseUrls/api/paniers/modifier_quantite/$ligneId';
+  static String supprimerLignePanier(int ligneId) =>
+      '$baseUrls/api/paniers/supprimer_ligne/$ligneId';
+  static String supprimerPanier(int panierId) =>
+      '$baseUrls/api/paniers/supprimer_panier/$panierId';
+  static String envoyerPanier(int panierId) =>
+      '$baseUrls/api/paniers/envoie_panier/$panierId';
+  static const String paniersEnAttente = '$baseUrls/api/paniers/attente';
 
 // Ajoutez d'autres endpoints ici au besoin, par exemple :
 // static const String ajoutMembre = '$baseUrl/api/users/ajouter/membre';

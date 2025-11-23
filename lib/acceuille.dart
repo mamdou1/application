@@ -361,7 +361,7 @@ class _CreateAcceuillePage extends State<Acceuille> {
                       // Boutique
                       GestureDetector(
                         onTap: () {
-                          print("Tu as cliqué sur : Boutique");
+                          Navigator.pushNamed(context, "/boutique");
                         },
                         child: Container(
                           decoration: BoxDecoration(
